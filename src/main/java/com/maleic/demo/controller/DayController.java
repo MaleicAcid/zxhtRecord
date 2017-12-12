@@ -2,6 +2,8 @@ package com.maleic.demo.controller;
 
 import com.maleic.demo.domain.Day;
 import com.maleic.demo.domain.DayRepository;
+import com.maleic.demo.domain.Record;
+import com.maleic.demo.domain.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +16,26 @@ public class DayController {
     @Autowired
     private DayRepository dayRepository;
 
+    @Autowired
+    private RecordRepository recordRepository;
+
     /**
      * 获取所有日期记录
      * @return
      */
-    @GetMapping(value = "/days")
+    @GetMapping(value = "")
     public List<Day> dayList() {
         return dayRepository.findAll();
+    }
+
+    @GetMapping(value = "/records")
+    public List<Record> recordList() {
+        return recordRepository.findAll();
+    }
+
+    @GetMapping(value = "/records1")
+    public List<Record> recordList1() {
+        return recordRepository.findByDid(2017120);
     }
 
     /**

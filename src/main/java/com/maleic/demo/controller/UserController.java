@@ -1,11 +1,10 @@
 package com.maleic.demo.controller;
 
 import com.maleic.demo.service.MailService;
-import com.maleic.demo.service.excel.ExcelService;
-import com.maleic.demo.service.excel.WeekRecord;
+import com.maleic.demo.service.ExcelService;
+import com.maleic.demo.utils.excel.WeekRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,6 +15,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    @Autowired
+    private WeekRecord weekRecord;
+
+    @Autowired
+    private ExcelService excelService;
 
     @Autowired
     private MailService mailService;
@@ -32,8 +37,7 @@ public class UserController {
         content += "<br/>";
         content += "即可正常打开文件。";
 
-        ExcelService excelService = new ExcelService();
-        excelService.addExcel(new WeekRecord());
+        excelService.addExcel(weekRecord);
 
         mailService.sendAttachmentsMail("fyf4831@dingtalk.com", "主题：马来酸的工作记录 2017-12-4", content,excelService.doMake());
 
