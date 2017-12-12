@@ -33,6 +33,13 @@ public class KalendarController {
         return modelAndView;
     }
 
+    public ModelAndView day(Integer did){
+        ModelAndView modelAndView = new ModelAndView("kalendar/day");
+        modelAndView.addObject("time", new Date());
+        modelAndView.addObject("message", "send mail success!");
+        return modelAndView;
+    }
+
     @ResponseBody
     @GetMapping("/getEvents")
     public HashMap getEvents(Long from){
@@ -61,43 +68,79 @@ public class KalendarController {
 
         HashMap ret = new HashMap();
         List result = new ArrayList();
-        ret.put("success",1);
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-        try {
         for (Record record :records) {
             HashMap data = new HashMap();
             data.put("id",record.getRid());
 
             String startTime = record.getStartTime();
-            String startTimeStr = record.getDid().toString() + " " + startTime;
-            Date startTimeDate;
-            startTimeDate = format.parse(startTimeStr);
-            double startTimeMillis = startTimeDate.getTime();
             startTime = startTime.substring(0,startTime.length()-3);
 
             String endTime = record.getEndTime();
-            String endTimeStr = record.getDid().toString() + " " + endTime;
-            Date endTimeDate;
-            endTimeDate = format.parse(endTimeStr);
-            double endTimeMillis = endTimeDate.getTime();
             endTime = endTime.substring(0,endTime.length()-3);
-
-            double hour = (endTimeMillis - startTimeMillis) / 1000 / 60 / 60;
 
             String title = record.getExplain();
             data.put("title", title + " " + startTime + "~" + endTime);
             data.put("class","event-information");
-            data.put("start",startTimeMillis);
-            data.put("end",endTimeMillis);
-            data.put("hour",new DecimalFormat("#.00").format(hour));
+            data.put("start",record.getStartTimeMillis());
+            data.put("end",record.getEndTimeMillis());
+            data.put("hour",record.calHours());
             result.add(data);
-        }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         ret.put("result",result);
+        ret.put("success",1);
+
+//        "success": 1,
+//        "result": [
+//        {
+//            "id": 293,
+//                "title": "Event 1",
+//                "url": "http://example.com",
+//                "class": "event-important",
+//                "start": 12039485678000, // Milliseconds
+//                "end": 1234576967000 // Milliseconds
+//        },
+//		...
+//	]
+        return ret;
+    }
+
+
+    @ResponseBody
+    @GetMapping("/getDayEvents")
+    public HashMap getDayEvents(Integer did){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        List<Integer> list = new ArrayList<Integer>();
+        list.add(did);
+
+        List<Record> records =  recordRepository.findByDidIn(list);
+
+        HashMap ret = new HashMap();
+        List result = new ArrayList();
+
+        for (Record record :records) {
+            HashMap data = new HashMap();
+            data.put("id",record.getRid());
+
+            String startTime = record.getStartTime();
+            startTime = startTime.substring(0,startTime.length()-3);
+
+            String endTime = record.getEndTime();
+            endTime = endTime.substring(0,endTime.length()-3);
+
+            String title = record.getExplain();
+            data.put("title", title + " " + startTime + "~" + endTime);
+            data.put("class","event-information");
+            data.put("start",record.getStartTimeMillis());
+            data.put("end",record.getEndTimeMillis());
+            data.put("hour",record.calHours());
+            result.add(data);
+        }
+
+        ret.put("result",result);
+        ret.put("success",1);
 
 //        "success": 1,
 //        "result": [

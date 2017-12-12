@@ -1,6 +1,6 @@
 <div class="cal-month-day <%= cls %>">
 	<!-- data-cal-view="day" 转跳到day页面-->
-	<span onclick="redirect(<%= data_day %>)" class="pull-right" data-cal-date="<%= data_day %>"  data-toggle="tooltip" title="<%= tooltip %>"><%= day %></span>
+	<span onclick='redirect("<%= data_day %>")' class="pull-right" data-cal-date="<%= data_day %>" data-cal-view="day"  data-toggle="tooltip" title="<%= tooltip %>"><%= day %></span>
 
 	<% if (events.length > 0) { %>
 		<%

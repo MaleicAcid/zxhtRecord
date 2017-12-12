@@ -63,6 +63,34 @@ public class Record {
         this.explain = explain;
     }
 
+    public long getStartTimeMillis() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String startTimeStr = this.getDid().toString() + " " + this.getStartTime();
+        Date startTimeDate = null;
+        try {
+            startTimeDate = format.parse(startTimeStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long startTimeMillis = startTimeDate.getTime();
+        return startTimeMillis;
+    }
+
+    public long getEndTimeMillis() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String endTimeStr = this.getDid().toString() + " " + this.getEndTime();
+        Date endTimeDate = null;
+        try {
+            endTimeDate = format.parse(endTimeStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long endTimeMillis = endTimeDate.getTime();
+        return endTimeMillis;
+    }
+
     public String calHours(){
         SimpleDateFormat sdf= new SimpleDateFormat("HH:mm:ss");
         Date time1 = null;
